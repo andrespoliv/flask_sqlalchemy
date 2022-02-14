@@ -32,12 +32,22 @@ def sitemap():
 
 @app.route('/user', methods=['GET'])
 def handle_hello():
-
+    print(User.query.all())
     response_body = {
         "msg": "Hello, this is your GET /user response "
     }
 
     return jsonify(response_body), 200
+
+@app.route('/new_user', methods=['POST'])
+def insert_new_user():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    is_active = request.json.get("is_active", None)
+    user = User(email=email, password=password, is_active=is_active)
+    db.session.add(user)
+    db.session.commit()
+    return "Ok", 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
